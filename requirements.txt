@@ -1,0 +1,6 @@
+SpeechRecognition==3.17.0
+PyAudio
+pyttsx3
+deep-translator
+langdetect
+playsound==1.2.2

@@ -1,17 +1,30 @@
 import pyttsx3
+from gtts import gTTS
+from playsound import playsound
+import os
+import tempfile
 
-def speak(text: str):
+def speak(text: str, language_code: str = "en"):
     """
     Converts text to speech and plays it out loud.
-    Later, this could be swapped for a cloud TTS service
-    (like OpenAI TTS) for higher quality voices.
+    - English uses pyttsx3 (offline, fast, no internet needed)
+    - Other languages use gTTS (online, correct native pronunciation)
     """
-    engine = pyttsx3.init()
-    engine.setProperty('rate', 170)   # speaking speed
-    engine.setProperty('volume', 1.0) # volume (0.0 to 1.0)
-    engine.say(text)
-    engine.runAndWait()
+    if language_code == "en":
+        engine = pyttsx3.init()
+        engine.setProperty('rate', 170)
+        engine.setProperty('volume', 1.0)
+        engine.say(text)
+        engine.runAndWait()
+    else:
+        tts = gTTS(text=text, lang=language_code)
+        # Save to a temporary file, play it, then clean up
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
+            temp_path = fp.name
+        tts.save(temp_path)
+        playsound(temp_path)
+        os.remove(temp_path)
 
 
 if __name__ == "__main__":
-    speak("Hello! I am FitNova, your fitness assistant.")
+    speak("آج کے کھانے کے لیے، میں گرلڈ چکن تجویز کروں گا۔", language_code="ur")
